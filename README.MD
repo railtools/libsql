@@ -13,8 +13,10 @@ This template helps you:
 
 ## 🔧 Prerequisites
 
-- Go 1.21+ must be installed: [https://go.dev/dl/](https://go.dev/dl/)
-- LibSQL database deployed (e.g. on [Railway](https://railway.app))
+- Go 1.21+ must be installed: \
+  [https://go.dev/dl/](https://go.dev/dl/)
+- LibSQL database deployed: \
+  [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/h2635z?referralCode=dPr4mc)
 ---
 
 ## 🚀 Quickstart
