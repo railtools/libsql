@@ -16,8 +16,7 @@ This template helps you:
 - Go 1.21+ must be installed: \
   [https://go.dev/dl/](https://go.dev/dl/)
 - LibSQL database deployed: \
-  [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/h2635z?referralCode=dPr4mc)
----
+  [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/libsql-jwt-auth?referralCode=dPr4mc)---
 
 ## 🚀 Quickstart
 
