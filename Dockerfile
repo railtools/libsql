@@ -12,8 +12,4 @@ EXPOSE 8080
 
 # Use the built-in entrypoint, just pass in the arguments directly
 ENTRYPOINT ["/usr/local/bin/libsql-server"]
-CMD [
-"--db-file", "/data/libsql.db",
-"--enable-http",
-"--http-listen-addr", "0.0.0.0:8080"
-]
+CMD [ "--db-file", "/data/libsql.db", "--enable-http", "--http-listen-addr", "0.0.0.0:8080", "--auth-token", "${LIBSQL_AUTH_TOKEN}" ]
