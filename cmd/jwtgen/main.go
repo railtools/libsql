@@ -13,7 +13,7 @@ import (
 
 func main() {
 	user := flag.String("user", "anonymous", "Subject (user) in the JWT")
-	expStr := flag.String("exp", "10y", "Expiration duration (e.g. 10m, 2h)")
+	expStr := flag.String("exp", "87600h", "Expiration duration (e.g. 10m, 2h, 87600h = 10 years)")
 	genKey := flag.Bool("gen", false, "Generate and show new key pair")
 	privKey := flag.String("priv", "", "Private key (base64url) to sign JWT")
 	flag.Parse()

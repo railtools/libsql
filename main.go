@@ -5,19 +5,27 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql" // register driver
 )
 
 func main() {
-	// TODO: Replace with your actual Railway app domain.
-	const appDomain = "libsql-production-b53d.up.railway.app"
+	// Your Railway public domain, e.g. "libsql-production-xxxx.up.railway.app".
+	// A full URL such as "http://localhost:8080" also works.
+	appDomain := os.Getenv("LIBSQL_DOMAIN")
+	// JWT generated with `go run ./cmd/jwtgen` (see README).
+	authToken := os.Getenv("LIBSQL_AUTH_TOKEN")
+	if appDomain == "" || authToken == "" {
+		log.Fatal("set LIBSQL_DOMAIN and LIBSQL_AUTH_TOKEN (see README)")
+	}
 
-	// TODO: generate your own authToken (see README)
-	const authToken = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ5MDYwMTg5NTQsInN1YiI6InVzZXIifQ.GaOet8Jv_WOUYEv71oSp-ps0XfJAzAkQY34W3zxAcE70xFZa8KRGpkt4ql-7IDXBHwVWpckHnynMgthsBpghDg" // Example only — don’t hardcode secrets in production.
-
-	// Construct the full DSN for connecting to LibSQL.
-	dsn := fmt.Sprintf("libsql://%s?authToken=%s", appDomain, authToken)
+	dsn := appDomain
+	if !strings.Contains(dsn, "://") {
+		dsn = "libsql://" + dsn
+	}
+	dsn = fmt.Sprintf("%s?authToken=%s", dsn, authToken)
 
 	db, err := sql.Open("libsql", dsn)
 	if err != nil {

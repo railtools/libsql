@@ -1,5 +1,7 @@
 # libsql on railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/libsql-jwt-auth?referralCode=dPr4mc)
+
 A minimal example using [Turso/LibSQL](https://github.com/tursodatabase/libsql) with JWT-based authentication in Go.  
 This template helps you:
 
@@ -13,10 +15,10 @@ This template helps you:
 
 ## 🔧 Prerequisites
 
-- Go 1.21+ must be installed: \
+- Go 1.27.4+ must be installed (Go 1.21+ fetches it automatically from `go.mod`): \
   [https://go.dev/dl/](https://go.dev/dl/)
-- LibSQL database deployed: \
-  [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/libsql-jwt-auth?referralCode=dPr4mc)
+- LibSQL database deployed on Railway (button above). The database file is stored on the
+  volume mounted at `/data`, so it survives redeploys.
 
 ## 🚀 Quickstart
 
@@ -27,7 +29,7 @@ go mod tidy
 ```
 ### 2. Generate a new keypair
 ```bash
-go run jwtgen.go --gen
+go run ./cmd/jwtgen --gen
 ```
 
 Example output:
@@ -41,9 +43,12 @@ sDrHAkZko9l5BvFhhAKiV0nJ0RKYhlXydKJSsPvOeAY
 
 Store the private key in a password manager.
 
+> ⚠️ Never reuse the example keys from this README: their private key is public, so anyone
+> could sign a valid JWT for your database. Always generate your own pair.
+
 ### 3. Update environment variable on RAILWAY
 On railway project -> Variables -> SQLD_AUTH_JWT_KEY
-`SQLD_AUTH_JWT_KEY`=`sDrHAkZko9l5BvFhhAKiV0nJ0RKYhlXydKJSsPvOeAY`
+`SQLD_AUTH_JWT_KEY`=`<YOUR_PUBLIC_KEY>`
 
 Update the value with the public key you generated.
 
@@ -52,32 +57,27 @@ Fill in the `🔐 PRIVATE KEY` from the previous step. And generate your JWT tok
 876000h = 100 years.
 
 ```bash
-go run jwtgen.go \
-  --priv uNvD4CzPyA2VTzbO1O4BAWTcpgtNrqD3hlu31gvGw6CwOscCRmSj2XkG8WGEAqJXScnREpiGVfJ0olKw-854Bg \
+go run ./cmd/jwtgen \
+  --priv <YOUR_PRIVATE_KEY> \
   --user user \
   --exp 876000h
 ```
 
 Result:
 ```bash
-📈 JWT:
+✅ JWT:
 eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ5MDYwMTg5NTQsInN1YiI6InVzZXIifQ.GaOet8Jv_WOUYEv71oSp-ps0XfJAzAkQY34W3zxAcE70xFZa8KRGpkt4ql-7IDXBHwVWpckHnynMgthsBpghDg
 ```
 Use this as your authToken.
 
-### 5. Update `main.go`
+### 5. Run example
 
-```go
-const authToken = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9..." // JWT token from previous step
-const appDomain = "libsql-production-8db1.up.railway.app" // railway domain
-
-dsn := fmt.Sprintf("libsql://%s?authToken=%s", appDomain, authToken)
-```
-
-### 6. Run example
+Point `main.go` at your Railway domain (Settings → Networking) and pass the JWT:
 
 ```bash
-go run main.go
+export LIBSQL_DOMAIN=libsql-production-xxxx.up.railway.app  # your Railway domain
+export LIBSQL_AUTH_TOKEN=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...  # JWT from previous step
+go run .
 ```
 Expected outcome:
 
@@ -97,4 +97,5 @@ exit status 1
 ✅ Troubleshooting:
 
 - Did you update the Railway environment with the correct public key?
-- Did you use the correct JWT in main.go?
+- Did you export the correct JWT in `LIBSQL_AUTH_TOKEN`?
+- Is `LIBSQL_DOMAIN` your service's public Railway domain (without `https://`)?
